@@ -15,6 +15,7 @@ __pycache__/
 *.pyd
 .Python
 *.so
+dashboardsqlpequeno.py
 
 # Archivos de configuración sensibles
 config.ini
