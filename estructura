@@ -1,0 +1,23 @@
+📁 dashboard_project/
+├── 📁 config/
+│   ├── __init__.py
+│   ├── database.py          # Configuración de BD
+│   └── settings.py          # Configuraciones generales
+├── 📁 data/
+│   ├── __init__.py
+│   ├── database_service.py  # Conexiones y queries
+│   ├── api_service.py       # Llamadas a APIs
+│   └── data_processor.py    # Procesamiento de datos
+├── 📁 models/
+│   ├── __init__.py
+│   └── data_models.py       # Modelos de datos
+├── 📁 utils/
+│   ├── __init__.py
+│   ├── date_utils.py        # Utilidades de fechas
+│   └── chart_utils.py       # Utilidades para gráficos
+├── 📁 views/
+│   ├── __init__.py
+│   ├── monthly_analysis.py  # Vista análisis mensual
+│   └── general_dashboard.py # Vista dashboard general
+├── main.py                  # Punto de entrada
+└── requirements.txt

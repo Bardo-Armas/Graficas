@@ -1,0 +1,10 @@
+## Para futuras ejecuciones:
+(Formato local en Mac)
+Cada vez que quieras ejecutar tu dashboard, necesitarás:
+1.
+   Activar el entorno virtual:
+   source venv/bin/activate
+   pip install -r requirements.txt (solo la primera vez)
+2. 
+   Ejecutar el dashboard:
+   streamlit run dashboardsqlpequeno.py

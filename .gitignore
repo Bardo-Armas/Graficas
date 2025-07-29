@@ -1,0 +1,29 @@
+# Archivos de entorno
+.env
+.env.local
+.env.production
+
+# Entorno virtual
+venv/
+env/
+ENV/
+
+# Archivos de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Archivos de configuración sensibles
+config.ini
+secrets.json
+
+# Logs
+*.log
+logs/
+
+# Archivos temporales
+.DS_Store
+Thumbs.db
