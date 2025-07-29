@@ -4,15 +4,30 @@ services:
     env: python
     buildCommand: |
       apt-get update
-      apt-get install -y unixodbc-dev freetds-dev freetds-bin
-      echo "[FreeTDS]" > /etc/odbcinst.ini
-      echo "Description = FreeTDS Driver" >> /etc/odbcinst.ini
-      echo "Driver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so" >> /etc/odbcinst.ini
-      echo "Setup = /usr/lib/x86_64-linux-gnu/odbc/libtdsS.so" >> /etc/odbcinst.ini
-      echo "FileUsage = 1" >> /etc/odbcinst.ini
+      apt-get install -y unixodbc-dev freetds-dev freetds-bin tdsodbc
+      
+      # Configurar odbcinst.ini
+      cat > /etc/odbcinst.ini << 'EOF'
+      [FreeTDS]
+      Description = FreeTDS Driver
+      Driver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so
+      Setup = /usr/lib/x86_64-linux-gnu/odbc/libtdsS.so
+      FileUsage = 1
+      
+      [ODBC Driver 17 for SQL Server]
+      Description = FreeTDS Driver for SQL Server
+      Driver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so
+      Setup = /usr/lib/x86_64-linux-gnu/odbc/libtdsS.so
+      FileUsage = 1
+      EOF
+      
+      # Verificar instalación
+      odbcinst -q -d
+      
+      # Instalar dependencias Python
       pip install -r requirements.txt
-      chmod +x init_render.sh
-    startCommand: ./init_render.sh
+      
+    startCommand: streamlit run main.py --server.port=$PORT --server.address=0.0.0.0
     envVars:
       - key: DB_SERVER
         value: www.da-db.mx
@@ -23,4 +38,4 @@ services:
       - key: DB_PASSWORD
         value: Pepe0106!
       - key: DB_DRIVER
-        value: "{FreeTDS}"
+        value: "FreeTDS"

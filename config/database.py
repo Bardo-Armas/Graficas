@@ -12,13 +12,13 @@ class DatabaseConfig:
         self.database = os.getenv('DB_DATABASE')
         self.username = os.getenv('DB_USERNAME')
         self.password = os.getenv('DB_PASSWORD')
-        self.driver = os.getenv('DB_DRIVER', '{FreeTDS}')
+        self.driver = os.getenv('DB_DRIVER', 'FreeTDS')
         
         print(f"🔧 Configuración de BD:")
         print(f"   Server: {self.server}")
         print(f"   Database: {self.database}")
         print(f"   Username: {self.username}")
-        print(f"   Driver: {self.driver}")
+        print(f"   Driver configurado: {self.driver}")
     
     def _get_available_driver(self):
         """Detectar el driver ODBC disponible en el sistema"""
@@ -26,18 +26,28 @@ class DatabaseConfig:
             drivers = pyodbc.drivers()
             print(f"🔍 Drivers disponibles: {drivers}")
             
-            # Priorizar FreeTDS para Render
-            if 'FreeTDS' in drivers:
-                print("✅ Usando FreeTDS")
-                return '{FreeTDS}'
+            # Lista de drivers en orden de preferencia
+            preferred_drivers = [
+                'FreeTDS',
+                'ODBC Driver 17 for SQL Server',
+                'ODBC Driver 18 for SQL Server',
+                'SQL Server Native Client 11.0',
+                'SQL Server'
+            ]
             
-            # Buscar otros drivers de SQL Server
+            # Buscar el primer driver disponible
+            for preferred in preferred_drivers:
+                if preferred in drivers:
+                    print(f"✅ Usando driver: {preferred}")
+                    return preferred
+            
+            # Si no encuentra ninguno preferido, usar el primero disponible que contenga "SQL"
             for driver in drivers:
-                if 'SQL Server' in driver:
-                    print(f"✅ Usando {driver}")
-                    return f'{{{driver}}}'
+                if 'SQL' in driver.upper() or 'TDS' in driver.upper():
+                    print(f"✅ Usando driver alternativo: {driver}")
+                    return driver
             
-            # Si no encuentra nada, usar el configurado
+            # Último recurso: usar el configurado
             print(f"⚠️ Usando driver configurado: {self.driver}")
             return self.driver
             
@@ -62,16 +72,13 @@ class DatabaseConfig:
         # Escapar caracteres especiales en la contraseña
         escaped_password = quote_plus(self.password)
         
-        # Limpiar el nombre del driver para la URL
-        clean_driver = available_driver.replace(' ', '+').replace('{', '').replace('}', '')
-        
-        # Construir connection string optimizada para Render
+        # Construir connection string
         connection_string = (
             f"mssql+pyodbc://{self.username}:{escaped_password}@{self.server}/"
-            f"{self.database}?driver={clean_driver}&TDS_Version=8.0&port=1433"
+            f"{self.database}?driver={available_driver}&TDS_Version=8.0&port=1433"
         )
         
-        print(f"🔗 Connection string: mssql+pyodbc://{self.username}:***@{self.server}/{self.database}?driver={clean_driver}")
+        print(f"🔗 Connection string: mssql+pyodbc://{self.username}:***@{self.server}/{self.database}?driver={available_driver}")
         
         try:
             # Configuración optimizada para Render
@@ -79,8 +86,8 @@ class DatabaseConfig:
                 connection_string, 
                 pool_pre_ping=True,
                 pool_recycle=1800,  # 30 minutos
-                pool_size=5,
-                max_overflow=10,
+                pool_size=3,        # Reducido para Render
+                max_overflow=5,     # Reducido para Render
                 echo=False,
                 connect_args={
                     "timeout": 60,
@@ -102,10 +109,10 @@ class DatabaseConfig:
             print(f"❌ Error de conexión: {str(e)}")
             print(f"🔧 Driver usado: {available_driver}")
             
-            # Información de diagnóstico para Render
+            # Información de diagnóstico
             try:
                 drivers = pyodbc.drivers()
-                print(f"🔍 Drivers disponibles en Render: {drivers}")
+                print(f"🔍 Drivers disponibles: {drivers}")
             except:
                 print("❌ No se pudieron listar los drivers")
             
