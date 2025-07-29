@@ -3,9 +3,16 @@ services:
     name: dashboard-sql
     env: python
     buildCommand: |
-      apt-get update && apt-get install -y unixodbc-dev freetds-dev
+      apt-get update
+      apt-get install -y unixodbc-dev freetds-dev freetds-bin
+      echo "[FreeTDS]" > /etc/odbcinst.ini
+      echo "Description = FreeTDS Driver" >> /etc/odbcinst.ini
+      echo "Driver = /usr/lib/x86_64-linux-gnu/odbc/libtdsodbc.so" >> /etc/odbcinst.ini
+      echo "Setup = /usr/lib/x86_64-linux-gnu/odbc/libtdsS.so" >> /etc/odbcinst.ini
+      echo "FileUsage = 1" >> /etc/odbcinst.ini
       pip install -r requirements.txt
-    startCommand: streamlit run main.py --server.port=$PORT --server.address=0.0.0.0
+      chmod +x init_render.sh
+    startCommand: ./init_render.sh
     envVars:
       - key: DB_SERVER
         value: www.da-db.mx
