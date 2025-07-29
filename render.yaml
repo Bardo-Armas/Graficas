@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: dashboard-sql
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run main.py --server.port=$PORT --server.address=0.0.0.0
+    envVars:
+      - key: DB_SERVER
+        value: www.da-db.mx
+      - key: DB_DATABASE
+        value: dev_apprisa_delivery
+      - key: DB_USERNAME
+        value: jbarrera
+      - key: DB_PASSWORD
+        value: Pepe0106!
+      - key: DB_DRIVER
+        value: "{ODBC Driver 17 for SQL Server}"
