@@ -7,8 +7,6 @@ enableXsrfProtection = false
 
 [browser]
 gatherUsageStats = false
-serverAddress = "0.0.0.0"
-serverPort = 8501
 
 [theme]
 primaryColor = "#1f77b4"
@@ -18,19 +16,18 @@ textColor = "#262730"
 font = "sans serif"
 
 [ui]
-hideTopBar = false
+hideTopBar = true
 hideSidebarNav = false
 
 [client]
 showErrorDetails = false
-toolbarMode = "auto"
+toolbarMode = "minimal"
 
 [global]
 developmentMode = false
 logLevel = "error"
 showWarningOnDirectExecution = false
 
-# Configuraciones adicionales
 [runner]
 magicEnabled = false
 installTracer = false

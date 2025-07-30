@@ -10,17 +10,71 @@ st.set_page_config(
     layout=AppSettings.LAYOUT
 )
 
-# Ocultar solo los elementos específicos solicitados
+# CSS más agresivo para ocultar todos los elementos específicos
 st.markdown("""
 <style>
-/* Ocultar el botón FORK */
+/* Ocultar COMPLETAMENTE la barra superior */
+.stAppHeader {display: none !important;}
+.stApp > header {display: none !important;}
 
-/* Ocultar logo de Git/GitHub */
+/* Ocultar toolbar completo */
+.stToolbar {display: none !important;}
+[data-testid="stToolbar"] {display: none !important;}
+
+/* Ocultar elementos específicos de GitHub/Fork */
 .github-corner {display: none !important;}
+.github-fork-ribbon {display: none !important;}
 [href*="github.com"] {display: none !important;}
 [title*="Fork"] {display: none !important;}
 [title*="GitHub"] {display: none !important;}
 
+/* Ocultar burbuja de usuario */
+.stAppToolbar {display: none !important;}
+[data-testid="stAppToolbar"] {display: none !important;}
+
+/* Ocultar coronita de Streamlit */
+.stDeployButton {display: none !important;}
+[data-testid="stDeployButton"] {display: none !important;}
+
+/* Ocultar menú principal */
+#MainMenu {display: none !important;}
+
+/* Ocultar cualquier botón de acción en la esquina */
+.stActionButton {display: none !important;}
+[data-testid="stActionButton"] {display: none !important;}
+
+/* Ocultar elementos flotantes */
+.stApp::before,
+.stApp::after {display: none !important;}
+
+/* Forzar que no aparezcan elementos en la parte superior */
+.stAppViewContainer {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+.main {
+    padding-top: 1rem !important;
+    margin-top: 0 !important;
+}
+
+/* Ocultar cualquier iframe o elemento externo */
+iframe[src*="github"] {display: none !important;}
+iframe[src*="streamlit"] {display: none !important;}
+
+/* Selectores adicionales para elementos persistentes */
+.stApp > div:first-child {display: none !important;}
+.stAppViewContainer > div:first-child {display: none !important;}
+
+/* Ocultar elementos con atributos específicos */
+[data-testid*="toolbar"] {display: none !important;}
+[data-testid*="header"] {display: none !important;}
+[class*="toolbar"] {display: none !important;}
+[class*="header"] {display: none !important;}
+
+/* Mantener SOLO el botón de configuración de tema si es necesario */
+/* Descomenta la siguiente línea si quieres mantener el botón de tema */
+/* [data-testid="stActionButton"][title*="Settings"] {display: block !important;} */
 </style>
 """, unsafe_allow_html=True)
 
