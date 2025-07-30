@@ -14,15 +14,12 @@ st.set_page_config(
 st.markdown("""
 <style>
 /* Ocultar el botón FORK */
-[data-testid="stToolbar"] {display: none !important;}
-.stAppToolbar {display: none !important;}
 
 /* Ocultar logo de Git/GitHub */
 .github-corner {display: none !important;}
 [href*="github.com"] {display: none !important;}
 [title*="Fork"] {display: none !important;}
 [title*="GitHub"] {display: none !important;}
-
 
 </style>
 """, unsafe_allow_html=True)
