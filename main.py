@@ -2,13 +2,16 @@ import streamlit as st
 from config.settings import AppSettings
 from views.monthly_analysis import MonthlyAnalysisView
 from views.general_dashboard import GeneralDashboardView
+from utils.styles import hide_streamlit_cloud_elements
 
 # Configurar página
 st.set_page_config(
     page_title=AppSettings.PAGE_TITLE,
     page_icon=AppSettings.PAGE_ICON,
-    layout=AppSettings.LAYOUT
+    layout=AppSettings.LAYOUT,
+    initial_sidebar_state="expanded"
 )
+hide_streamlit_cloud_elements()
 
 def main():
     """Función principal de la aplicación"""

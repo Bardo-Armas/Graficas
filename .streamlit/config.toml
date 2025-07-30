@@ -7,3 +7,35 @@ enableXsrfProtection = false
 
 [browser]
 gatherUsageStats = false
+serverAddress = "0.0.0.0"
+serverPort = 8501
+
+[theme]
+primaryColor = "#1f77b4"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f8f9fa"
+textColor = "#262730"
+font = "sans serif"
+
+[ui]
+hideTopBar = true
+hideSidebarNav = false
+
+[client]
+showErrorDetails = false
+toolbarMode = "minimal"
+
+[global]
+developmentMode = false
+logLevel = "error"
+showWarningOnDirectExecution = false
+
+# Configuraciones adicionales para ocultar elementos
+[runner]
+magicEnabled = false
+installTracer = false
+fixMatplotlib = true
+
+[logger]
+level = "error"
+messageFormat = "%(asctime)s %(message)s"
