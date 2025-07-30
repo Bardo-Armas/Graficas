@@ -23,12 +23,7 @@ st.markdown("""
 [title*="Fork"] {display: none !important;}
 [title*="GitHub"] {display: none !important;}
 
-/* Ocultar el menú principal */
-#MainMenu {visibility: hidden;}
 
-/* Ocultar la barra superior completa */
-.stAppHeader {display: none !important;}
-.stApp > header {display: none !important;}
 </style>
 """, unsafe_allow_html=True)
 
