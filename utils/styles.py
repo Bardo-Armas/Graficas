@@ -19,7 +19,7 @@ def hide_specific_elements():
     </style>
     """
     st.markdown(hide_style, unsafe_allow_html=True)
-
+ 
 def apply_professional_styling():
     """
     Aplica todos los estilos profesionales de una vez
