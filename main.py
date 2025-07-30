@@ -10,30 +10,17 @@ st.set_page_config(
     layout=AppSettings.LAYOUT
 )
 
-# Ocultar solo elementos específicos pero mantener el botón de tema
+# Ocultar solo los elementos específicos solicitados
 st.markdown("""
 <style>
-/* Ocultar logo de Git/GitHub y elementos relacionados */
+/* Ocultar el botón FORK */
+
+/* Ocultar logo de Git/GitHub */
 .github-corner {display: none !important;}
 [href*="github.com"] {display: none !important;}
 [title*="Fork"] {display: none !important;}
 [title*="GitHub"] {display: none !important;}
 
-/* Ocultar el menú principal pero mantener botón de tema */
-#MainMenu {visibility: hidden;}
-
-/* Ocultar elementos específicos de FORK pero mantener configuraciones */
-[data-testid="stToolbar"] > div:first-child {display: none !important;}
-.stAppToolbar > div:first-child {display: none !important;}
-
-/* Mantener visible el botón de configuración/tema */
-[data-testid="stToolbar"] > div:last-child {display: block !important;}
-.stAppToolbar > div:last-child {display: block !important;}
-
-/* Asegurar que el botón de configuración sea visible */
-[data-testid="stToolbar"] [data-testid="stActionButton"] {display: block !important;}
-.stActionButton[title*="Settings"] {display: block !important;}
-.stActionButton[title*="Configuración"] {display: block !important;}
 </style>
 """, unsafe_allow_html=True)
 
