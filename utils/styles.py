@@ -7,9 +7,6 @@ def hide_specific_elements():
     hide_style = """
     <style>
     /* Ocultar el botón FORK */
-    [data-testid="stToolbar"] {display: none !important;}
-    .stAppToolbar {display: none !important;}
-
     /* Ocultar logo de Git/GitHub */
     .github-corner {display: none !important;}
     [href*="github.com"] {display: none !important;}
