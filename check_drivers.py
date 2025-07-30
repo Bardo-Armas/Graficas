@@ -7,15 +7,6 @@ load_dotenv()
 print("=== DIAGNÓSTICO DE DRIVERS ODBC ===")
 print()
 
-# Verificar variables de entorno
-print("Variables de entorno:")
-print(f"DB_SERVER: {os.getenv('DB_SERVER')}")
-print(f"DB_DATABASE: {os.getenv('DB_DATABASE')}")
-print(f"DB_USERNAME: {os.getenv('DB_USERNAME')}")
-print(f"DB_PASSWORD: {'***' if os.getenv('DB_PASSWORD') else 'NO CONFIGURADA'}")
-print(f"DB_DRIVER: {os.getenv('DB_DRIVER')}")
-print()
-
 # Verificar drivers disponibles
 print("Drivers ODBC disponibles en el sistema:")
 drivers = pyodbc.drivers()

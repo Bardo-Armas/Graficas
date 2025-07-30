@@ -12,12 +12,6 @@ class DatabaseConfig:
         self.username = os.getenv('DB_USERNAME')
         self.password = os.getenv('DB_PASSWORD')
         self.driver = os.getenv('DB_DRIVER', 'pymssql')
-        
-        print(f"🔧 Configuración de BD:")
-        print(f"   Server: {self.server}")
-        print(f"   Database: {self.database}")
-        print(f"   Username: {self.username}")
-        print(f"   Driver: {self.driver}")
     
     def _try_pyodbc_connection(self):
         """Intentar conexión con pyodbc"""

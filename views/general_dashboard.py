@@ -8,6 +8,7 @@ from data.data_processor import DataProcessor
 from utils.chart_utils import ChartUtils
 from utils.error_handler import handle_errors, validate_date_range
 from utils.date_utils import DateUtils
+from utils.pdf_generator import create_pdf_download_button
 from config.settings import AppSettings
 
 class GeneralDashboardView:
@@ -157,14 +158,32 @@ class GeneralDashboardView:
                     use_container_width=True
                 )
                 
-                # Botón de descarga
-                csv = top_10.to_csv(index=False).encode("utf-8")
-                st.download_button(
-                    "Descargar datos", 
-                    data=csv, 
-                    file_name=f"top_establecimientos_{self.fecha_inicio}_{self.fecha_fin}.csv", 
-                    mime="text/csv"
-                )
+                # Botones de descarga
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    csv = top_10.to_csv(index=False).encode("utf-8")
+                    st.download_button(
+                        "📊 Descargar CSV", 
+                        data=csv, 
+                        file_name=f"top_establecimientos_{self.fecha_inicio}_{self.fecha_fin}.csv", 
+                        mime="text/csv"
+                    )
+                
+                with col2:
+                    # Botón de descarga PDF
+                    metrics = {
+                        "Total de Establecimientos": len(top_10),
+                        "Pedidos Totales": int(top_10["total_pedidos"].sum()),
+                        "Período": f"{self.fecha_inicio} - {self.fecha_fin}"
+                    }
+                    create_pdf_download_button(
+                        title="Top 10 Establecimientos",
+                        chart_fig=fig,
+                        dataframe=top_10,
+                        filename_base="top_establecimientos",
+                        metrics=metrics
+                    )
             else:
                 st.warning("No hay suficientes datos para mostrar el top 10 establecimientos")
         else:
@@ -205,14 +224,33 @@ class GeneralDashboardView:
                     use_container_width=True
                 )
                 
-                # Botón de descarga
-                csv = df_establecimientospedidos.to_csv(index=False).encode("utf-8")
-                st.download_button(
-                    "Descargar Datos", 
-                    data=csv, 
-                    file_name=f"establecimientos_pedidos_{self.fecha_inicio}_{self.fecha_fin}.csv", 
-                    mime="text/csv"
-                )
+                # Botones de descarga
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    csv = df_establecimientospedidos.to_csv(index=False).encode("utf-8")
+                    st.download_button(
+                        "📊 Descargar CSV", 
+                        data=csv, 
+                        file_name=f"establecimientos_pedidos_{self.fecha_inicio}_{self.fecha_fin}.csv", 
+                        mime="text/csv"
+                    )
+                
+                with col2:
+                    # Botón de descarga PDF
+                    metrics = {
+                        "Establecimientos Promedio": f"{df_establecimientospedidos['Establecimientos'].mean():.0f}",
+                        "Pedidos Promedio": f"{df_establecimientospedidos['Pedidos'].mean():.0f}",
+                        "Ratio Promedio": f"{df_establecimientospedidos['Promedio'].mean():.2f}",
+                        "Período": f"{self.fecha_inicio} - {self.fecha_fin}"
+                    }
+                    create_pdf_download_button(
+                        title="Análisis de Establecimientos y Pedidos",
+                        chart_fig=fig,
+                        dataframe=df_establecimientospedidos,
+                        filename_base="establecimientos_pedidos",
+                        metrics=metrics
+                    )
             else:
                 st.warning("No hay datos de establecimientos y pedidos disponibles")
         else:
@@ -248,14 +286,32 @@ class GeneralDashboardView:
                     use_container_width=True
                 )
                 
-                # Botón de descarga
-                csv = contador_horas[["etiqueta_hora", "pedidos"]].to_csv(index=False).encode("utf-8")
-                st.download_button(
-                    "Descargar Datos", 
-                    data=csv, 
-                    file_name=f"pedidos_hora_{fecha_hora}.csv", 
-                    mime="text/csv"
-                )
+                # Botones de descarga
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    csv = contador_horas[["etiqueta_hora", "pedidos"]].to_csv(index=False).encode("utf-8")
+                    st.download_button(
+                        "📊 Descargar CSV", 
+                        data=csv, 
+                        file_name=f"pedidos_hora_{fecha_hora}.csv", 
+                        mime="text/csv"
+                    )
+                
+                with col2:
+                    # Botón de descarga PDF
+                    metrics = {
+                        "Fecha": fecha_hora.strftime("%Y-%m-%d"),
+                        "Total de Pedidos": total_pedidos,
+                        "Hora Pico": f"{hora_pico['etiqueta_hora']} ({hora_pico['pedidos']} pedidos)"
+                    }
+                    create_pdf_download_button(
+                        title=f"Análisis de Pedidos por Hora - {fecha_hora}",
+                        chart_fig=fig,
+                        dataframe=contador_horas[["etiqueta_hora", "pedidos"]].rename(columns={"etiqueta_hora": "Hora", "pedidos": "Pedidos"}),
+                        filename_base=f"pedidos_hora_{fecha_hora}",
+                        metrics=metrics
+                    )
             else:
                 st.warning(f"No hay pedidos registrados para {fecha_hora.strftime('%Y-%m-%d')}")
         else:
@@ -293,14 +349,32 @@ class GeneralDashboardView:
                     use_container_width=True
                 )
                 
-                # Botón de descarga
-                csv = df_concurrencia.to_csv(index=False).encode("utf-8")
-                st.download_button(
-                    "Descargar Datos de Concurrencia", 
-                    data=csv, 
-                    file_name=f"concurrencia_{fecha_concurrencia}.csv", 
-                    mime="text/csv"
-                )
+                # Botones de descarga
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    csv = df_concurrencia.to_csv(index=False).encode("utf-8")
+                    st.download_button(
+                        "📊 Descargar CSV", 
+                        data=csv, 
+                        file_name=f"concurrencia_{fecha_concurrencia}.csv", 
+                        mime="text/csv"
+                    )
+                
+                with col2:
+                    # Botón de descarga PDF
+                    metrics = {
+                        "Fecha": fecha_concurrencia.strftime("%Y-%m-%d"),
+                        "Máxima Concurrencia": max_val,
+                        "Hora Pico": f"{hora_inicio.strftime('%H:%M')} - {hora_fin.strftime('%H:%M')}"
+                    }
+                    create_pdf_download_button(
+                        title=f"Análisis de Concurrencia - {fecha_concurrencia}",
+                        chart_fig=fig_concurrencia,
+                        dataframe=df_concurrencia,
+                        filename_base=f"concurrencia_{fecha_concurrencia}",
+                        metrics=metrics
+                    )
             else:
                 st.warning(f"No hay datos para {fecha_concurrencia}")
         else:
@@ -350,14 +424,37 @@ class GeneralDashboardView:
                 hide_index=True
             )
             
-            # Botón de descarga
-            csv = pedidos_semanales.to_csv(index=False).encode("utf-8")
-            st.download_button(
-                "Descargar Datos", 
-                data=csv, 
-                file_name=f"pedidos_semanales_{fecha_inicio_sem}_{fecha_actual}.csv", 
-                mime="text/csv"
-            )
+            # Botones de descarga
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                csv = pedidos_semanales.to_csv(index=False).encode("utf-8")
+                st.download_button(
+                    "📊 Descargar CSV", 
+                    data=csv, 
+                    file_name=f"pedidos_semanales_{fecha_inicio_sem}_{fecha_actual}.csv", 
+                    mime="text/csv"
+                )
+            
+            with col2:
+                # Botón de descarga PDF
+                metrics = {
+                    "Pedidos Totales": f"{total:,}",
+                    "Semana con Más Pedidos": f"Semana {semana_max['semana']} ({semana_max['pedidos_totales']:,})",
+                    "Semana con Menos Pedidos": f"Semana {semana_min['semana']} ({semana_min['pedidos_totales']:,})",
+                    "Período": f"{fecha_inicio_sem} - {fecha_actual}"
+                }
+                create_pdf_download_button(
+                    title="Análisis Semanal de Pedidos",
+                    chart_fig=fig,
+                    dataframe=pedidos_semanales[["semana", "rango_fechas", "pedidos_totales"]].rename(columns={
+                        "semana": "Semana", 
+                        "rango_fechas": "Rango", 
+                        "pedidos_totales": "Pedidos"
+                    }),
+                    filename_base="pedidos_semanales",
+                    metrics=metrics
+                )
         else:
             st.warning("No hay datos de pedidos disponibles")
     
@@ -444,13 +541,43 @@ class GeneralDashboardView:
                 }
             )
             
-            # Botón de descarga
-            csv = df_combinado.to_csv(index=False).encode("utf-8")
-            st.download_button(
-                "Descargar Datos Completos", 
-                data=csv, 
-                file_name=f"creditos_pedidos_semanales_{fecha_inicio_sem}_{fecha_actual}.csv", 
-                mime="text/csv"
-            )
+            # Botones de descarga
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                csv = df_combinado.to_csv(index=False).encode("utf-8")
+                st.download_button(
+                    "📊 Descargar CSV", 
+                    data=csv, 
+                    file_name=f"creditos_pedidos_semanales_{fecha_inicio_sem}_{fecha_actual}.csv", 
+                    mime="text/csv"
+                )
+            
+            with col2:
+                # Botón de descarga PDF
+                metrics = {
+                    "Créditos Totales": f"{total:,}",
+                    "Semana con Más Créditos": f"Semana {semana_max['semana']} ({semana_max['creditos_totales']:,})",
+                    "Semana con Menos Créditos": f"Semana {semana_min['semana']} ({semana_min['creditos_totales']:,})",
+                    "Período": f"{fecha_inicio_sem} - {fecha_actual}"
+                }
+                if semana_mas_costosa is not None:
+                    metrics["Semana Más Costosa"] = f"Semana {semana_mas_costosa['semana']} (${semana_mas_costosa['creditos_por_pedido']:,.2f}/pedido)"
+                
+                create_pdf_download_button(
+                    title="Análisis Semanal de Créditos",
+                    chart_fig=fig,
+                    dataframe=df_combinado[["semana", "rango_fechas", "pedidos_totales", "creditos_totales", "creditos_por_pedido"]].rename(
+                        columns={
+                            "semana": "Semana", 
+                            "rango_fechas": "Rango", 
+                            "pedidos_totales": "Pedidos", 
+                            "creditos_totales": "Créditos",
+                            "creditos_por_pedido": "Créditos/Pedido"
+                        }
+                    ),
+                    filename_base="creditos_semanales",
+                    metrics=metrics
+                )
         else:
             st.warning("No hay datos completos disponibles (créditos y pedidos)")
