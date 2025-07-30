@@ -45,6 +45,8 @@ def hide_streamlit_elements():
     /* Ocultar elementos específicos de Streamlit Cloud */
     .stAppViewContainer > .main > div[data-testid="stToolbar"] {display: none !important;}
     
+    /* Ocultar la barra de herramientas superior completa */
+    .stApp > header {display: none !important;}
     
     /* Ocultar cualquier elemento flotante de GitHub */
     .github-fork-ribbon {display: none !important;}
@@ -76,7 +78,7 @@ def hide_streamlit_elements():
     """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-
+def apply_custom_theme():
     """
     Aplica un tema personalizado profesional
     """
@@ -175,6 +177,39 @@ def hide_streamlit_elements():
     </style>
     """
     st.markdown(custom_theme, unsafe_allow_html=True)
+
+def add_custom_footer():
+    """
+    Añade un footer personalizado profesional
+    """
+    footer = """
+    <style>
+    .custom-footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #f8f9fa;
+        color: #6c757d;
+        text-align: center;
+        padding: 10px 0;
+        border-top: 1px solid #e6e9ef;
+        font-size: 12px;
+        z-index: 999;
+    }
+    
+    /* Añadir espacio al contenido principal para el footer */
+    .main {
+        margin-bottom: 60px;
+    }
+    </style>
+    <div class="custom-footer">
+        <p>© 2024 Dashboard Profesional - Análisis de Datos</p>
+    </div>
+    """
+    st.markdown(footer, unsafe_allow_html=True)
+
+def hide_streamlit_cloud_elements():
     """
     Oculta elementos específicos que aparecen en Streamlit Cloud
     """
@@ -222,3 +257,12 @@ def hide_streamlit_elements():
     </style>
     """
     st.markdown(cloud_hide_style, unsafe_allow_html=True)
+
+def apply_professional_styling():
+    """
+    Aplica todos los estilos profesionales de una vez
+    """
+    hide_streamlit_elements()
+    apply_custom_theme()
+    hide_streamlit_cloud_elements()
+    add_custom_footer()
