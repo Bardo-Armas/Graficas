@@ -260,3 +260,4 @@ class StaticAnalysisView:
         else:
             st.warning("No hay datos completos disponibles (créditos y pedidos)")
 
+

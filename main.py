@@ -87,7 +87,7 @@ def main():
     # Selector de vista
     app_mode = st.sidebar.selectbox(
         "Seleccione el dashboard", 
-        ["Análisis Mensual", "Estadísticas Generales"]
+        ["Análisis Mensual", "Estadísticas Generales", "Estadísticas"]
     )
     
     # Renderizar vista seleccionada
@@ -97,7 +97,7 @@ def main():
     elif app_mode == "Estadísticas Generales":
         general_view = GeneralDashboardView()
         general_view.render()
-    else:  #app_mode == "Estadísticas"
+    elif app_mode == "Estadísticas":
         statistic_view = StaticAnalysisView()
         statistic_view.render()
 
