@@ -1,7 +1,9 @@
+import statistics
 import streamlit as st
 from config.settings import AppSettings
 from views.monthly_analysis import MonthlyAnalysisView
 from views.general_dashboard import GeneralDashboardView
+from views.static_analysis import StaticAnalysisView
 
 # Configurar página
 st.set_page_config(
@@ -92,9 +94,12 @@ def main():
     if app_mode == "Análisis Mensual":
         monthly_view = MonthlyAnalysisView()
         monthly_view.render()
-    else:
+    elif app_mode == "Estadísticas Generales":
         general_view = GeneralDashboardView()
         general_view.render()
+    else:  #app_mode == "Estadísticas"
+        statistic_view = StaticAnalysisView()
+        statistic_view.render()
 
 if __name__ == "__main__":
     main()
