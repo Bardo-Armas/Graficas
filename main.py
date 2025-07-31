@@ -97,7 +97,7 @@ def main():
     elif app_mode == "Estadísticas Generales":
         general_view = GeneralDashboardView()
         general_view.render()
-    elif app_mode == "Estadísticas Anuales":
+    elif app_mode == "Estadísticas Semanales":
         statistic_view = StaticAnalysisView()
         statistic_view.render()
 
