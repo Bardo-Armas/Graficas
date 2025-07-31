@@ -55,24 +55,9 @@ class DatabaseService:
             
             # Mostrar información de diagnóstico
             print("🔍 Información de diagnóstico:")
-            print(f"   - Drivers disponibles: {pyodbc.drivers()}")
             print(f"   - Servidor: {_self.db_config.server}")
             print(f"   - Base de datos: {_self.db_config.database}")
-            print(f"   - Usuario: {_self.db_config.username}")
-            print(f"   - Driver configurado: {_self.db_config.driver}")
-            
-            st.error(f"Error de conexión ODBC: {str(e)}")
-            st.info("💡 Sugerencias:")
-            st.write("1. Verifica que el driver ODBC esté instalado correctamente")
-            st.write("2. Ejecuta: `python check_drivers.py` para ver drivers disponibles")
-            st.write("3. Si usas macOS, considera instalar FreeTDS: `brew install freetds`")
-            
-            return None
-            
-        except SQLAlchemyError as e:
-            error_msg = f"Error SQLAlchemy: {str(e)}"
-            print(f"❌ {error_msg}")
-            st.error(error_msg)
+
             return None
             
         except Exception as e:

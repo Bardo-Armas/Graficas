@@ -263,18 +263,37 @@ class DataProcessor:
     @staticmethod
     def _calculate_week_numbers(fechas):
         """Calcular números de semana basado en lógica específica"""
-        primera_semana_inicio = datetime(2025, 1, 1).date()
-        primera_semana_fin = datetime(2025, 1, 5).date()
-        segunda_semana_inicio = datetime(2025, 1, 6).date()
-        
         semanas = []
-        for fecha in fechas:
-            if fecha <= primera_semana_fin:
-                semanas.append(1)
-            else:
-                dias_desde_segunda_semana = (fecha - segunda_semana_inicio).days
-                numero_semana = (dias_desde_segunda_semana // 7) + 2
-                semanas.append(numero_semana)
+        for fecha_dt in fechas:
+            fecha = fecha_dt.date() if isinstance(fecha_dt, datetime) else fecha_dt
+            current_date_year = fecha.year
+
+            week_num = None
+
+            if current_date_year == 2025:
+                if datetime(2025, 1, 1).date() <= fecha <= datetime(2025, 1, 5).date():
+                    week_num = 1
+                elif datetime(2025, 12, 29).date() <= fecha <= datetime(2025, 12, 31).date():
+                    week_num = 53
+            elif current_date_year == 2026:
+                if datetime(2026, 1, 1).date() <= fecha <= datetime(2026, 1, 4).date():
+                    week_num = 1
+                elif datetime(2026, 1, 5).date() <= fecha <= datetime(2026, 1, 11).date():
+                    week_num = 2
+                elif datetime(2026, 12, 28).date() <= fecha <= datetime(2026, 12, 31).date():
+                    week_num = datetime(2026, 12, 31).isocalendar()[1]
+            elif current_date_year == 2027:
+                if datetime(2027, 1, 1).date() <= fecha <= datetime(2027, 1, 3).date():
+                    week_num = 1
+                elif datetime(2027, 1, 4).date() <= fecha <= datetime(2027, 1, 10).date():
+                    week_num = 2
+                elif datetime(2027, 12, 27).date() <= fecha <= datetime(2027, 12, 31).date():
+                    week_num = datetime(2027, 12, 31).isocalendar()[1]
+
+            if week_num is None:
+                week_num = fecha.isocalendar()[1]
+
+            semanas.append(week_num)
         return semanas
     
     @staticmethod
