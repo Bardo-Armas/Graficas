@@ -138,7 +138,7 @@ class StaticAnalysisView:
                     
                     # Verificar si la columna order_completion_date existe
                     if "order_completion_date" not in df_estadistica.columns:
-                        st.warning("⚠️ Los datos no contienen información de fechas de completado de pedidos. No se puede procesar el análisis de créditos.")
+                        st.warning("⚠️ No hay datos en las fechas seleccionadas. Por lo tanto no se puede procesar el análisis de créditos.")
                         return
                     
                     # Verificar si hay datos válidos en la columna
