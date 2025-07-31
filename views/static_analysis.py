@@ -23,7 +23,7 @@ class StaticAnalysisView:
     @handle_errors
     def render(self):
         """Renderizar vista de análisis estático"""
-        st.title("📊 Otros Análisis")
+        st.title("📊 Estadísticas Anuales")
         
         # Configurar año seleccionado
         current_year = datetime.now().year
