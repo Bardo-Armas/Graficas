@@ -5,7 +5,6 @@ import plotly.express as px
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor
 from data.database_service import DatabaseService
-from data.api_service import APIService
 from data.data_processor import DataProcessor
 from utils.chart_utils import ChartUtils
 from utils.error_handler import handle_errors, validate_date_range
@@ -15,7 +14,6 @@ from config.settings import AppSettings
 class StaticAnalysisView:
     def __init__(self):
         self.db_service = DatabaseService()
-        self.api_service = APIService()
         self.data_processor = DataProcessor()
         self.chart_utils = ChartUtils()
         self.date_utils = DateUtils()

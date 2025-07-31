@@ -3,7 +3,6 @@ import pandas as pd
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor
 from data.database_service import DatabaseService
-from data.api_service import APIService
 from data.data_processor import DataProcessor
 from utils.chart_utils import ChartUtils
 from utils.error_handler import handle_errors, validate_date_range
@@ -13,7 +12,6 @@ from config.settings import AppSettings
 class GeneralDashboardView:
     def __init__(self):
         self.db_service = DatabaseService()
-        self.api_service = APIService()
         self.data_processor = DataProcessor()
         self.chart_utils = ChartUtils()
         self.date_utils = DateUtils()
@@ -70,11 +68,6 @@ class GeneralDashboardView:
         with tab5:
             self._render_concurrency_tab(ayer)
         
-        with tab6:
-            self._render_weekly_orders_tab()
-        
-        with tab7:
-            self._render_weekly_credits_tab()
     
     def _render_main_charts_tab(self, ayer):
         """Renderizar tab de gráficas principales"""
