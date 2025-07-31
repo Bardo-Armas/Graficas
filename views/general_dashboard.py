@@ -376,6 +376,9 @@ class GeneralDashboardView:
             if resultado[0] is not None:
                 fig_concurrencia, max_val, hora_inicio, hora_fin, df_concurrencia = resultado
                 
+                # Filtrar datos donde Pedidos_Simultaneos > 0
+                df_concurrencia = df_concurrencia[df_concurrencia['Pedidos_Simultaneos'] > 0]
+                
                 # Métricas
                 col1, col2 = st.columns(2)
                 col1.metric("Máxima Concurrencia", max_val)
