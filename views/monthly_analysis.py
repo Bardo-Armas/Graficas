@@ -325,12 +325,12 @@ class MonthlyAnalysisView:
             ))
             
             # Línea de ratio (azul)
-            fig.add_trace(go.Scatter(
-                x=df_diario_mes["fecha"], 
-                y=df_diario_mes["ratio"], 
-                name="Ratio", 
-                line=dict(color="blue")
-            ))
+            #fig.add_trace(go.Scatter(
+            #    x=df_diario_mes["fecha"], 
+            #    y=df_diario_mes["ratio"], 
+            #    name="Ratio", 
+            #    line=dict(color="blue")
+            #))
 
             # Configurar layout del gráfico
             fig.update_layout(
