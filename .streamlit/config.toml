@@ -1,3 +1,5 @@
+# .streamlit/config.toml
+
 [server]
 port = 8501
 address = "0.0.0.0"
@@ -7,8 +9,6 @@ enableXsrfProtection = false
 
 [browser]
 gatherUsageStats = false
-serverAddress = "0.0.0.0"
-serverPort = 8501
 
 [theme]
 primaryColor = "#1f77b4"
@@ -17,25 +17,9 @@ secondaryBackgroundColor = "#f8f9fa"
 textColor = "#262730"
 font = "sans serif"
 
-[ui]
-hideTopBar = false
-hideSidebarNav = false
-
-[client]
-showErrorDetails = false
-toolbarMode = "auto"
-
-[global]
-developmentMode = false
-logLevel = "error"
-showWarningOnDirectExecution = false
-
-# Configuraciones adicionales
-[runner]
-magicEnabled = false
-installTracer = false
-fixMatplotlib = true
-
 [logger]
 level = "error"
 messageFormat = "%(asctime)s %(message)s"
+
+[runner]
+magicEnabled = false
