@@ -57,7 +57,7 @@ class StaticAnalysisView:
             
             if datos_estadistica_pedidos and datos_estadistica_pedidos.get("success"):
                 pedidos_semanales = self.data_processor.calculate_weekly_data(
-                    datos_estadistica_pedidos, "pedidos"
+                    datos_estadistica_pedidos, "pedidos", selected_year
                 )
             else:
                 st.error("No se pudieron obtener datos de pedidos")
@@ -133,45 +133,69 @@ class StaticAnalysisView:
             data_creditos_pedidos = self.db_service.get_orders_data(fecha_inicio_sem, fecha_actual)
             
             if data_creditos_pedidos is not None and data_creditos_pedidos.get("success"):
-                df_estadistica = pd.DataFrame(data_creditos_pedidos["data"]["detalle"]["general"]["todos"])
-                df_estadistica = df_estadistica.dropna(subset=["order_completion_date"])
+                try:
+                    df_estadistica = pd.DataFrame(data_creditos_pedidos["data"]["detalle"]["general"]["todos"])
+                    
+                    # Verificar si la columna order_completion_date existe
+                    if "order_completion_date" not in df_estadistica.columns:
+                        st.warning("⚠️ Los datos no contienen información de fechas de completado de pedidos. No se puede procesar el análisis de créditos.")
+                        return
+                    
+                    # Verificar si hay datos válidos en la columna
+                    if df_estadistica["order_completion_date"].isna().all():
+                        st.warning("⚠️ No hay fechas de completado válidas en los datos. No se puede procesar el análisis de créditos.")
+                        return
+                    
+                    df_estadistica = df_estadistica.dropna(subset=["order_completion_date"])
+                    
+                    if df_estadistica.empty:
+                        st.warning("⚠️ No hay datos válidos después de filtrar por fechas de completado. Intenta con un rango de fechas diferente.")
+                        return
+                    
+                except Exception as e:
+                    st.error(f"⚠️ Error al procesar los datos: Los datos recibidos no tienen el formato esperado. Por favor, verifica la conexión con la base de datos.")
+                    return
                 
                 if not df_estadistica.empty:
-                    creditos_semanales = self.data_processor.calculate_weekly_data(
-                        data_creditos_pedidos, "creditos"
-                    )
-                    pedidos_semanales_for_credits = self.data_processor.calculate_weekly_data(
-                        data_creditos_pedidos, "pedidos"
-                    )
-                    
-                    if (not creditos_semanales.empty and 
-                        not pedidos_semanales_for_credits.empty):
-                        
-                        df_combinado = creditos_semanales.merge(
-                            pedidos_semanales_for_credits[["semana", "pedidos_totales"]],
-                            on="semana",
-                            how="left"
+                    try:
+                        creditos_semanales = self.data_processor.calculate_weekly_data(
+                            data_creditos_pedidos, "creditos", selected_year
                         )
-                        df_combinado["creditos_por_pedido"] = (
-                            df_combinado["creditos_totales"] / 
-                            df_combinado["pedidos_totales"].replace(0, np.nan)
+                        pedidos_semanales_for_credits = self.data_processor.calculate_weekly_data(
+                            data_creditos_pedidos, "pedidos", selected_year
                         )
-                        df_combinado = df_combinado.dropna(subset=["creditos_por_pedido"])
                         
-                        if not df_combinado.empty:
-                            semana_mas_costosa = df_combinado.loc[
-                                df_combinado["creditos_por_pedido"].idxmax()
-                            ]
+                        if (not creditos_semanales.empty and 
+                            not pedidos_semanales_for_credits.empty):
+                            
+                            df_combinado = creditos_semanales.merge(
+                                pedidos_semanales_for_credits[["semana", "pedidos_totales"]],
+                                on="semana",
+                                how="left"
+                            )
+                            df_combinado["creditos_por_pedido"] = (
+                                df_combinado["creditos_totales"] / 
+                                df_combinado["pedidos_totales"].replace(0, np.nan)
+                            )
+                            df_combinado = df_combinado.dropna(subset=["creditos_por_pedido"])
+                            
+                            if not df_combinado.empty:
+                                semana_mas_costosa = df_combinado.loc[
+                                    df_combinado["creditos_por_pedido"].idxmax()
+                                ]
+                            else:
+                                semana_mas_costosa = None
                         else:
-                            semana_mas_costosa = None
-                    else:
-                        st.error("No se pudieron obtener datos completos (créditos y pedidos)")
+                            st.warning("⚠️ No se pudieron calcular los datos semanales. Verifica que haya suficientes datos en el período seleccionado.")
+                            df_combinado = None
+                    except Exception as e:
+                        st.error(f"⚠️ Error al calcular datos semanales: No se pudieron procesar los datos correctamente.")
                         df_combinado = None
                 else:
-                    st.error("No hay datos de estadísticas disponibles para procesar créditos y pedidos.")
+                    st.warning("⚠️ No hay datos de estadísticas disponibles para procesar créditos y pedidos.")
                     df_combinado = None
             else:
-                st.error("No se pudieron obtener datos de la API para créditos y pedidos.")
+                st.warning("⚠️ No se pudieron obtener datos de la API. Verifica la conexión con la base de datos.")
                 df_combinado = None
         
         if df_combinado is not None and not df_combinado.empty:
@@ -256,6 +280,13 @@ class StaticAnalysisView:
                 mime="text/csv"
             )
         else:
-            st.warning("No hay datos completos disponibles (créditos y pedidos)")
+            st.info("📊 No hay datos suficientes para mostrar el análisis de créditos en el período seleccionado. Intenta con un rango de fechas diferente o verifica que haya pedidos completados en este período.")
+
+
+# Función de compatibilidad para mantener la función original
+def otros_dashboard():
+    """Función de compatibilidad para mantener la interfaz original"""
+    view = StaticAnalysisView()
+    view.render()
 
 

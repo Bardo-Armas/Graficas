@@ -158,41 +158,65 @@ class DataProcessor:
         return fig, max_concurrencia, mejor_inicio, mejor_fin, df_concurrencia
     
     @staticmethod
-    def calculate_weekly_data(data_estadistica, data_type="pedidos"):
+    def calculate_weekly_data(data_estadistica, data_type="pedidos", selected_year=None):
         """Calcular datos semanales con mejor manejo de errores"""
-        if not data_estadistica or not data_estadistica.get("success"):
+        if data_estadistica is None or not data_estadistica.get("success") or not data_estadistica["data"]["detalle"]["general"]["todos"]:
             return pd.DataFrame()
-        
+
         df = pd.DataFrame(data_estadistica["data"]["detalle"]["general"]["todos"])
-        
-        if df.empty:
+
+        if data_type == "pedidos":
+            if "order_completion_date" not in df.columns:
+                return pd.DataFrame()
+            df["fecha"] = pd.to_datetime(df["order_completion_date"], errors='coerce').dt.date
+            col_valor = "total_pedidos"
+            df_agrupado = df.dropna(subset=["fecha"]).groupby("fecha").size().reset_index(name="total_pedidos")
+        else:
+            if "created_at" not in df.columns:
+                return pd.DataFrame()
+            df["fecha"] = pd.to_datetime(df["created_at"], errors='coerce').dt.date
+            col_valor = "costo_creditos"
+            df[col_valor] = pd.to_numeric(df["costo_creditos"], errors="coerce").fillna(0)
+            df_agrupado = df.dropna(subset=["fecha"]).groupby("fecha")[col_valor].sum().reset_index()
+
+        if df_agrupado.empty:
             return pd.DataFrame()
-        
-        try:
-            if data_type == "pedidos":
-                df["fecha"] = pd.to_datetime(df["order_completion_date"]).dt.date
-                df_agrupado = df.groupby("fecha").size().reset_index(name="total_pedidos")
-                value_col = "total_pedidos"
-            else:  # creditos
-                df["fecha"] = pd.to_datetime(df["created_at"]).dt.date
-                df["costo_creditos"] = pd.to_numeric(df["costo_creditos"], errors="coerce").fillna(0)
-                df_agrupado = df.groupby("fecha")["costo_creditos"].sum().reset_index()
-                value_col = "costo_creditos"
-            
-            # Calcular semanas
-            df_agrupado["semana"] = DataProcessor._calculate_week_numbers(df_agrupado["fecha"])
-            
-            # Agrupar por semana
-            weekly_data = df_agrupado.groupby("semana")[value_col].sum().reset_index()
-            
-            # Agregar rangos de fechas
-            weekly_data = DataProcessor._add_date_ranges(weekly_data, data_type)
-            
-            return weekly_data.sort_values("semana")
-            
-        except Exception as e:
-            st.error(f"Error procesando datos semanales: {str(e)}")
+
+        # Si no se proporciona selected_year, usar el año actual
+        if selected_year is None:
+            selected_year = datetime.now().year
+
+        df_agrupado = df_agrupado[pd.to_datetime(df_agrupado['fecha']).dt.year == selected_year].copy()
+
+        if df_agrupado.empty:
             return pd.DataFrame()
+
+        df_agrupado["semana"] = DataProcessor._calculate_week_numbers(df_agrupado["fecha"])
+
+        semanal = df_agrupado.groupby("semana").agg({col_valor: "sum"}).reset_index()
+
+        if data_type == "pedidos":
+            semanal.rename(columns={col_valor: "pedidos_totales"}, inplace=True)
+        else:
+            semanal.rename(columns={col_valor: "creditos_totales"}, inplace=True)
+
+        fecha_inicios = []
+        fecha_fins = []
+        for week_num in semanal["semana"]:
+            week_data = df_agrupado[df_agrupado['semana'] == week_num]['fecha']
+            if not week_data.empty:
+                min_date = week_data.min()
+                max_date = week_data.max()
+                fecha_inicios.append(min_date)
+                fecha_fins.append(max_date)
+            else:
+                fecha_inicios.append(None)
+                fecha_fins.append(None)
+
+        semanal["fecha_inicio"] = fecha_inicios
+        semanal["fecha_fin"] = fecha_fins
+        semanal["rango_fechas"] = semanal.apply(lambda x: f"{x['fecha_inicio'].strftime('%d-%m-%Y')} - {x['fecha_fin'].strftime('%d-%m-%Y')}" if x['fecha_inicio'] else "N/A", axis=1)
+        return semanal.sort_values("semana")
     
     @staticmethod
     def process_monthly_data(data_estadistica):
@@ -297,7 +321,7 @@ class DataProcessor:
         return semanas
     
     @staticmethod
-    def _add_date_ranges(weekly_data, data_type):
+    def _add_date_ranges(weekly_data, data_type,selected_year):
         """Agregar rangos de fechas a datos semanales"""
         primera_semana_inicio = datetime(2025, 1, 1).date()
         primera_semana_fin = datetime(2025, 1, 5).date()
