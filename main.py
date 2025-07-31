@@ -87,7 +87,7 @@ def main():
     # Selector de vista
     app_mode = st.sidebar.selectbox(
         "Seleccione el dashboard", 
-        ["Análisis Mensual", "Estadísticas Generales", "Estadísticas Anuales"]
+        ["Análisis Mensual", "Estadísticas Generales", "Estadísticas Semanales"]
     )
     
     # Renderizar vista seleccionada

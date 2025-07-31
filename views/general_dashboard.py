@@ -50,7 +50,7 @@ class GeneralDashboardView:
     
     def _render_tabs(self, ayer):
         """Renderizar tabs del dashboard"""
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+        tab1, tab2, tab3, tab4, tab5 = st.tabs([
             "Gráficas Principales", "Top 10 Establecimientos", "Establecimientos y Pedidos", 
             "Pedidos por Hora", "Concurrencias"
         ])
