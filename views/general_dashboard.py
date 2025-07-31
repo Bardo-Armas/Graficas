@@ -308,6 +308,103 @@ class GeneralDashboardView:
                     hide_index=True, 
                     use_container_width=True
                 )
-                
-                # ... existing code ...
+                            # Botón de descarga
+                csv = df_establecimientospedidos.to_csv(index=False).encode("utf-8")
+                st.download_button(
+                    "📊 Descargar CSV", 
+                    data=csv, 
+                    file_name=f"establecimientos_pedidos_{self.fecha_inicio}_{self.fecha_fin}.csv", 
+                    mime="text/csv"
+                )
+            else:
+                st.warning("No hay datos de establecimientos y pedidos disponibles")
+        else:
+            st.warning("No se obtuvieron valores de la API")
     
+    def _render_hourly_orders_tab(self, ayer):
+        """Renderizar tab de pedidos por hora"""
+        fecha_hora = st.date_input("Fecha", value=ayer, key="tab4_fecha")
+        data_hora = self.db_service.get_orders_data(self.fecha_inicio, self.fecha_fin)
+        
+        if data_hora is not None:
+            contador_horas = self.data_processor.process_hourly_orders(data_hora, fecha_hora)
+            
+            if not contador_horas.empty:
+                # Métricas
+                total_pedidos = contador_horas["pedidos"].sum()
+                hora_pico = contador_horas.loc[contador_horas["pedidos"].idxmax()]
+                
+                col1, col2, col3 = st.columns(3)
+                col1.metric("Fecha", fecha_hora.strftime("%Y-%m-%d"))
+                col2.metric("Total de Pedidos", total_pedidos)
+                col3.metric("Hora Pico", f"{hora_pico['etiqueta_hora']}", f"{hora_pico['pedidos']} pedidos")
+                
+                # Gráfico
+                fig = self.chart_utils.create_hourly_orders_chart(contador_horas, fecha_hora)
+                if fig:
+                    st.plotly_chart(fig, use_container_width=True, key="grafico_pedidos_hora_tab4")
+                
+                # Tabla de datos
+                st.dataframe(
+                    contador_horas[["etiqueta_hora", "pedidos"]].rename(columns={"etiqueta_hora": "Hora", "pedidos": "Pedidos"}), 
+                    hide_index=True, 
+                    use_container_width=True
+                )
+                
+                # Botón de descarga
+                csv = contador_horas[["etiqueta_hora", "pedidos"]].to_csv(index=False).encode("utf-8")
+                st.download_button(
+                    "📊 Descargar CSV", 
+                    data=csv, 
+                    file_name=f"pedidos_hora_{fecha_hora}.csv", 
+                    mime="text/csv"
+                )
+            else:
+                st.warning(f"No hay pedidos registrados para {fecha_hora.strftime('%Y-%m-%d')}")
+        else:
+            st.warning("No se obtuvieron valores de la API")
+    
+    def _render_concurrency_tab(self, ayer):
+        """Renderizar tab de concurrencias"""
+        fecha_concurrencia = st.date_input("Fecha", value=ayer, key="tab5_fecha")
+        data_concurrencia = self.db_service.get_orders_data(self.fecha_inicio, self.fecha_fin)
+        
+        if data_concurrencia is not None:
+            df_estadistica = pd.DataFrame(data_concurrencia["data"]["detalle"]["general"]["todos"])
+            resultado = self.data_processor.process_concurrency(df_estadistica, fecha_concurrencia)
+            
+            if resultado[0] is not None:
+                fig_concurrencia, max_val, hora_inicio, hora_fin, df_concurrencia = resultado
+                
+                # Métricas
+                col1, col2 = st.columns(2)
+                col1.metric("Máxima Concurrencia", max_val)
+                col2.metric("Hora Pico", f"{hora_inicio.strftime('%H:%M')} - {hora_fin.strftime('%H:%M')}")
+                
+                # Gráfico
+                st.plotly_chart(fig_concurrencia, use_container_width=True, key="grafico_concurrencia_tab5")
+                
+                # Tabla de datos
+                st.subheader("Datos de Concurrencia")
+                st.dataframe(
+                    df_concurrencia, 
+                    column_config={
+                        "Hora": st.column_config.DatetimeColumn("Hora", format="HH:mm"), 
+                        "Pedidos_Simultaneos": st.column_config.NumberColumn("Pedidos Simultáneos")
+                    }, 
+                    hide_index=True, 
+                    use_container_width=True
+                )
+                
+                # Botón de descarga
+                csv = df_concurrencia.to_csv(index=False).encode("utf-8")
+                st.download_button(
+                    "📊 Descargar CSV", 
+                    data=csv, 
+                    file_name=f"concurrencia_{fecha_concurrencia}.csv", 
+                    mime="text/csv"
+                )
+            else:
+                st.warning(f"No hay datos para {fecha_concurrencia}")
+        else:
+            st.warning("No se obtuvieron datos de la API")
