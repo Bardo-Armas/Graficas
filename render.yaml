@@ -3,7 +3,7 @@ services:
     name: dashboard-sql
     env: python
     buildCommand: python setup_render.py && pip install -r requirements.txt
-    startCommand: streamlit run main.py --server.port=$PORT --server.address=0.0.0.0
+    startCommand: streamlit run main.py --server.port=$PORT --server.address=0.0.0.0 --server.headless=true
     envVars:
       - key: DB_SERVER
         value: www.da-db.mx

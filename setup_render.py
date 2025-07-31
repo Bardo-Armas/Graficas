@@ -18,11 +18,16 @@ def install_system_packages():
         ]
         
         for cmd in commands:
-            result = subprocess.run(cmd.split(), capture_output=True, text=True)
-            if result.returncode == 0:
-                print(f"✅ {cmd}")
-            else:
-                print(f"⚠️ {cmd} - {result.stderr}")
+            try:
+                result = subprocess.run(cmd.split(), capture_output=True, text=True, timeout=60)
+                if result.returncode == 0:
+                    print(f"✅ {cmd}")
+                else:
+                    print(f"⚠️ {cmd} - {result.stderr}")
+            except subprocess.TimeoutExpired:
+                print(f"⚠️ {cmd} - Timeout")
+            except Exception as e:
+                print(f"⚠️ {cmd} - Error: {e}")
                 
     except Exception as e:
         print(f"⚠️ No se pudieron instalar paquetes del sistema: {e}")
@@ -61,6 +66,13 @@ def main():
     
     # Configurar ODBC
     configure_odbc()
+    
+    # Verificar que pymssql esté disponible como fallback
+    try:
+        import pymssql
+        print("✅ pymssql disponible como fallback")
+    except ImportError:
+        print("⚠️ pymssql no disponible - verificar requirements.txt")
     
     print("✅ Configuración completada")
 

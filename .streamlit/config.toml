@@ -1,7 +1,8 @@
 # .streamlit/config.toml
 
 [server]
-port = 8501
+# Remover la configuración de puerto fijo para que use el de Render
+# port = 8501  # Comentar esta línea
 address = "0.0.0.0"
 headless = true
 enableCORS = false
