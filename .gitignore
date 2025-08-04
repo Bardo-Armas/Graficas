@@ -28,3 +28,6 @@ logs/
 # Archivos temporales
 .DS_Store
 Thumbs.db
+mapasbardo2.py
+dashboardsqlpequeno.py
+dashboardsqlpequeno2.py

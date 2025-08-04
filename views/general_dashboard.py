@@ -287,7 +287,7 @@ class GeneralDashboardView:
                 col1, col2, col3 = st.columns(3)
                 col1.metric("Establecimientos Activos Promedio", f"{df_establecimientospedidos['Establecimientos'].mean():.0f}")
                 col2.metric("Pedidos (promedio)", f"{df_establecimientospedidos['Pedidos'].mean():.0f}")
-                #col3.metric("Ratio Pedidos/Establecimientos", f"{df_establecimientospedidos['Promedio'].mean():.2f}")
+                col3.metric("Ratio Pedidos/Establecimientos", f"{df_establecimientospedidos['Promedio'].mean():.2f}")
                 
                 # Gráfico de dispersión para análisis de correlación
                 fig = self.chart_utils.create_establishments_orders_chart(

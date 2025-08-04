@@ -14,11 +14,11 @@ import pyodbc
 st.set_page_config(page_title="Dashboard Integrado", page_icon="📊", layout="wide")
 
 def get_db_connection():
-    server = 'www.da-db.mx'
-    database = 'dev_apprisa_delivery'
-    username = 'jbarrera'
-    password = 'Pepe0106!'
-    driver = '{ODBC Driver 17 for SQL Server}'
+    server = os.getenv('DB_SERVER')
+    database = os.getenv('DB_DATABASE')
+    username = os.getenv('DB_USERNAME')
+    password = os.getenv('DB_PASSWORD')
+    driver = os.getenv('DB_DRIVER', '{ODBC Driver 17 for SQL Server}')
     conn_str = f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password}'
     return pyodbc.connect(conn_str)
 
