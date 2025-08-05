@@ -63,8 +63,6 @@ def main():
     """Función principal de la aplicación"""
     try:
         # CSS para ocultar elementos de GitHub y Streamlit
-        st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-        
         st.sidebar.title("Menú Principal")
         
         # Selector de vista
