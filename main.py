@@ -62,6 +62,22 @@ def check_password_for_protected_views(view_name):
 def main():
     """Función principal de la aplicación"""
     try:
+        # CSS para ocultar elementos de GitHub y Streamlit
+        hide_streamlit_style = """
+            <style>
+            /* Ocultar botón Fork y elementos de GitHub */
+            .viewerBadge_container__1QSob,
+            .styles_viewerBadge__1yB5_,
+            .viewerBadge_link__1S137,
+            .viewerBadge_text__1JaDK {
+                display: none !important;
+            }
+            
+           
+            </style>
+        """
+        st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+        
         st.sidebar.title("Menú Principal")
         
         # Selector de vista
