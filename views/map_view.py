@@ -170,7 +170,7 @@ class MapView:
             /* Ocultar elementos de Streamlit */
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
-            header {visibility: hidden;}
+            /* header {visibility: hidden;} */
             
             /* Configuración del contenedor principal */
             .appview-container .main .block-container {
