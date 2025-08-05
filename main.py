@@ -72,6 +72,25 @@ def main():
             .viewerBadge_text__1JaDK {
                 display: none !important;
             }
+
+            /* Ocultar ícono de GitHub específicamente */
+            #GithubIcon,
+            [data-testid="stToolbar"] > div,
+            .stActionButton > button {
+                visibility: hidden !important;
+                display: none !important;
+            }
+            
+            /* Ocultar elementos que contengan "Fork" o "GitHub" */
+            [title*="Fork"], 
+            [aria-label*="Fork"],
+            [alt*="Fork"],
+            [title*="GitHub"],
+            [aria-label*="GitHub"],
+            [alt*="GitHub"] {
+                display: none !important;
+                visibility: hidden !important;
+            }
             
            
             </style>
