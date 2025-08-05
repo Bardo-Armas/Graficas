@@ -63,30 +63,6 @@ def main():
     """Función principal de la aplicación"""
     try:
         # CSS para ocultar elementos de GitHub y Streamlit
-        hide_streamlit_style = """
-            <style>
-            /* Ocultar botón Fork y elementos de GitHub */
-            .viewerBadge_container__1QSob,
-            .styles_viewerBadge__1yB5_,
-            .viewerBadge_link__1S137,
-            .viewerBadge_text__1JaDK {
-                display: none !important;
-            }
-            
-            /* Ocultar elementos que contengan "Fork" o "GitHub" */
-            [title*="Fork"], 
-            [aria-label*="Fork"],
-            [alt*="Fork"],
-            [title*="GitHub"],
-            [aria-label*="GitHub"],
-            [alt*="GitHub"] {
-                display: none !important;
-                visibility: hidden !important;
-            }
-            
-           
-            </style>
-        """
         st.markdown(hide_streamlit_style, unsafe_allow_html=True)
         
         st.sidebar.title("Menú Principal")
