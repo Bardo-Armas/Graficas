@@ -183,7 +183,6 @@ class MapView:
             /* Centrar el contenido */
             .st-emotion-cache-z5fcl4 {
                 padding: 0px;
-                display: flex;
                 flex-direction: column;
                 align-items: center;
             }
