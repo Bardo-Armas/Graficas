@@ -11,3 +11,10 @@ sqlalchemy>=2.0.0
 urllib3>=1.26.0
 folium>=0.14.0
 streamlit-folium>=0.13.0
+# Agregar librerías especializadas de ML
+scikit-learn>=1.3.0
+xgboost>=1.7.0
+lightgbm>=3.3.0
+optuna>=3.0.0  # Para optimización de hiperparámetros
+statsmodels>=0.14.0  # Para análisis de series temporales
+prophet>=1.1.0  # Para predicciones estacionales avanzadas
