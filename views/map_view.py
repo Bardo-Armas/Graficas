@@ -30,7 +30,7 @@ class MapView:
         LEFT OUTER JOIN tbl_address_client as tac on tac.id_address = tbo.id_address
         left outer JOIN addresses ads on tbo.addresses_id = ads.ad_id
         WHERE tbo.[status] not in (39)
-        AND tr.id_restaurant NOT IN (102, 107, 137, 140, 146, 152, 156, 174, 195, 196, 203, 231, 10309, 10357, 10385, 10447, 10453, 10455, 10463, 10472, 10294)
+        AND tr.id_restaurant NOT IN (102,107,137,140,146,152,156,174,195,196,203,231,10309,10357,10385,10447,10453,10463,10472,10294,186,188,205,213,215,217,234,238,244,272,274,275,279,10320,10348)
     
         """
         

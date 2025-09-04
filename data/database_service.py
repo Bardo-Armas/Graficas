@@ -73,7 +73,7 @@ class DatabaseService:
             FROM orders_details
             WHERE CONVERT(DATE, order_completion_date) >= '{fecha_inicio}' 
               AND CONVERT(DATE, order_completion_date) <= '{fecha_fin}'
-              AND id_restaurant NOT IN (102, 107, 137, 140, 146, 152, 156, 174, 195, 196, 203, 231, 10309, 10357, 10385, 10447, 10453, 10455, 10463, 10472, 10294)
+              AND id_restaurant NOT IN (102,107,137,140,146,152,156,174,195,196,203,231,10309,10357,10385,10447,10453,10463,10472,10294,186,188,205,213,215,217,234,238,244,272,274,275,279,10320,10348)
         """)
         
         try:
