@@ -1,3 +1,5 @@
+apt-utils
+unixodbc
 unixodbc-dev
 freetds-dev
 freetds-bin
