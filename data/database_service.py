@@ -63,17 +63,42 @@ class DatabaseService:
         # Consulta SQL optimizada con campos específicos necesarios
         query = dedent(f"""
             SELECT 
-                id_order,                    -- ID único de la orden
-                order_completion_date,       -- Fecha de completación de la orden
-                order_acceptance_date,       -- Fecha de aceptación de la orden
-                costo_creditos,             -- Costo en créditos de la orden
-                id_restaurant,              -- ID del establecimiento
-                name_restaurant,            -- Nombre del establecimiento
-                created_at                  -- Fecha de creación del registro
-            FROM orders_details
-            WHERE CONVERT(DATE, order_completion_date) >= '{fecha_inicio}' 
-              AND CONVERT(DATE, order_completion_date) <= '{fecha_fin}'
-              AND id_restaurant NOT IN (102,107,137,140,146,152,156,174,195,196,203,231,10309,10357,10385,10447,10453,10463,10472,10294,186,188,205,213,215,217,234,238,244,272,274,275,279,10320,10348)
+            o.id_order,
+            o.delivery as 'id_delivery',
+            d.name + ' ' + d.last_name + ' ' + d.mother_last_name as 'name_delivery',
+            d.turno,
+            o.restaurant as 'id_restaurant',
+            r.name_restaurant,
+            r.latitude as 'latitude_restaurant',
+            r.longitude as 'longitude_restaurant',
+            ct.latitude as 'latitude_client',
+            ct.longitude as 'longitude_client',
+            o.payment as 'id_payment',
+            c.payment,
+            o.costo_envio,
+            o.baksheesh,
+            o.total,
+            o.costo_creditos,
+            o.km_order,
+            o.time_order,
+            o.created_at,
+            o.order_acceptance_date,
+            o.order_completion_date,
+            DATEDIFF(minute, o.created_at, o.order_acceptance_date) as 'minutos_asignacion',
+            DATEDIFF(minute, o.order_acceptance_date, o.establishment_arrival_date) as 'minutos_traslado_establecimiento',
+            DATEDIFF(minute, o.establishment_arrival_date, o.start_delivery_datetime) as 'minutos_espera_establecimiento',
+            DATEDIFF(minute, o.start_delivery_datetime, o.arrival_client_date) as 'minutos_entrega',
+            DATEDIFF(minute, o.arrival_client_date, o.order_completion_date) as 'minutos_cobro',
+            DATEDIFF(minute, o.order_acceptance_date, o.order_completion_date) as 'tiempo_total'
+        FROM tbl_orders o
+        INNER JOIN tbl_delivery d on o.delivery = d.id_delivery
+        INNER JOIN ctl_payment c on o.payment = c.id_payment
+        INNER JOIN tbl_restaurants r on o.restaurant = r.id_restaurant
+        INNER JOIN tbl_address_client ct on o.id_address = ct.id_address
+        WHERE o.status = 24
+        AND r.id_restaurant NOT IN (212, 102, 107, 137, 140, 146, 152, 156, 174, 195, 196, 203, 231, 10309, 10357, 10385, 10447, 10294, 186, 188, 205, 213, 215, 217, 234, 238, 244, 272, 274, 275, 279, 10320, 10348)
+        AND CONVERT(DATE, o.order_completion_date) >= '{fecha_inicio}'
+        AND CONVERT(DATE, o.order_completion_date) <= '{fecha_fin}'
         """)
         
         try:
